@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    include:
+      - jwt
+      - oauth
+      - database
+  jackson:
+    time-zone: Asia/Seoul
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+
+logging:
+  level:
+    org.hibernate.SQL: info
+
+
+server:
+  servlet:
+    session:
+      timeout: 240
