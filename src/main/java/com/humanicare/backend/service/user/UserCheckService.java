@@ -23,7 +23,6 @@ public class UserCheckService {
         validateUserIsNotNull(user);
         return user;
     }
-
     private void validateUserIsNotNull(final User user) {
         if (user == null) {
             throw new UserHandler(ErrorStatus._USER_NOT_FOUND);

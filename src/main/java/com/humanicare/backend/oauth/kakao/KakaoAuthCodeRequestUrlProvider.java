@@ -21,10 +21,10 @@ public class KakaoAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvid
     public String provide() {
         return UriComponentsBuilder
                 .fromUriString("https://kauth.kakao.com/oauth/authorize")
-                .queryParam("response_type", "code")
                 .queryParam("client_id", kakaoOauthConfig.clientId())
                 .queryParam("redirect_uri", kakaoOauthConfig.redirectUri())
-                .queryParam("scope", String.join(",", kakaoOauthConfig.scope()))
+                .queryParam("response_type", "code")
+//                .queryParam("scope", String.join(",", kakaoOauthConfig.scope()))
                 .toUriString();
     }
 }

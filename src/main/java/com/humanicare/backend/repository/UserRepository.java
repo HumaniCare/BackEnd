@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByOauthId(final OauthId oauthId);
 
+    boolean existsByInvitationCode(String code);
 }

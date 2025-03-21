@@ -12,16 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @SuperBuilder
 @AllArgsConstructor
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user",
         uniqueConstraints = {
@@ -44,6 +42,7 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String email;
     private String name;
+    private String invitationCode;
 
     @Enumerated(EnumType.STRING)
     private Role role;
