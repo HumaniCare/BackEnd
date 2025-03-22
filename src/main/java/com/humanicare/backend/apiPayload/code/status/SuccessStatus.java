@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum SuccessStatus implements BaseCode {
+    //생성 2000, 조회 2001, 수정 2002, 삭제 2003
 
     _OK(HttpStatus.OK, "COMMON200", "성공"),
 
@@ -19,7 +20,29 @@ public enum SuccessStatus implements BaseCode {
     //User
     OAUTH_REDIRECT(HttpStatus.OK, "OAUTH2000", "소셜 로그인 리다이렉트 성공"),
     OAUTH_LOGIN(HttpStatus.OK, "OAUTH2001", "소셜 로그인 성공"),
-    SIGN_OUT_USER(HttpStatus.OK, "USER2000", "회원 탈퇴 성공");
+    SIGN_OUT_USER(HttpStatus.OK, "USER2000", "회원 탈퇴 성공"),
+
+    //BasicSchedule
+    SAVE_BASIC_SCHEDULE(HttpStatus.OK, "BASICSCHEDULE2000", "기본 일정 생성 성공"),
+    GET_BASIC_SCHEDULE(HttpStatus.OK, "BASICSCHEDULE2001", "기본 일정 조회 성공"),
+    PUT_BASIC_SCHEDULE(HttpStatus.OK, "BASICSCHEDULE2002", "기본 일정 수정 성공"),
+    DELETE_BASIC_SCHEDULE(HttpStatus.OK, "BASICSCHDULE2003", "기본 일정 삭제 성공"),
+
+    //Schedule
+    SAVE_SCHEDULE(HttpStatus.OK, "SCHEDULE2000", "특수 일정 생성 성공"),
+    GET_SCHEDULE(HttpStatus.OK, "SCHEDULE2001", "특수 일정 조회 성공"),
+    PUT_SCHEDULE(HttpStatus.OK, "SCHEDULE2002", "특수 일정 수정 성공"),
+    DELETE_SCHEDULE(HttpStatus.OK, "SCHDULE2003", "특수 일정 삭제 성공"),
+
+    //Diary
+    GET_DIARY(HttpStatus.OK, "DIARY2000", "감정일기 확인 성공"),
+
+    //Report
+    GET_REPORT(HttpStatus.OK, "REPORT2000", "감정 리포트확인 성공"),
+
+    //통계페이지..?
+    GET_STATISTICS(HttpStatus.OK, "STATISTICS2000", "통계페이지 확인 성공");
+
 
     private final HttpStatus httpStatus;
     private final String code;
