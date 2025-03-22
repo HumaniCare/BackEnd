@@ -42,7 +42,7 @@ public class OauthService {
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 //        jwtService.updateRefreshToken(user.getEmail(), refreshToken);
 
-        log.info("사용자 로그인 완료, email : {}", user.getEmail());
+        log.info("사용자 로그인 완료");
         return saved;
     }
 }

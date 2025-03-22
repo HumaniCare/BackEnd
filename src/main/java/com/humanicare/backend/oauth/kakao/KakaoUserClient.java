@@ -1,11 +1,13 @@
 package com.humanicare.backend.oauth.kakao;
 
 import com.humanicare.backend.domain.oauth.User;
+import com.humanicare.backend.oauth.InvitationCodeGenerator;
 import com.humanicare.backend.oauth.OauthServerType;
 import com.humanicare.backend.oauth.client.KakaoApiClient;
 import com.humanicare.backend.oauth.client.OauthUserClient;
 import com.humanicare.backend.oauth.dto.KakaoMemberResponse;
 import com.humanicare.backend.oauth.dto.KakaoToken;
+import com.humanicare.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,6 +27,7 @@ public class KakaoUserClient implements OauthUserClient {
 
     private final KakaoApiClient kakaoApiClient;
     private final KakaoOauthConfig kakaoOauthConfig;
+    private final InvitationCodeGenerator invitationCodeGenerator;
 
     @Override
     public OauthServerType supportServer() {
@@ -36,7 +39,7 @@ public class KakaoUserClient implements OauthUserClient {
         KakaoToken tokenInfo = kakaoApiClient.fetchToken(tokenRequestParams(authCode)); // (1)
         KakaoMemberResponse kakaoMemberResponse = kakaoApiClient.fetchMember(
                 "Bearer " + tokenInfo.accessToken());  // (2)
-        return kakaoMemberResponse.toDomain();  // (3)
+        return kakaoMemberResponse.toDomain(invitationCodeGenerator.generateUniqueInvitationCode());  // (3)
     }
 
     private MultiValueMap<String, String> tokenRequestParams(String authCode) {
