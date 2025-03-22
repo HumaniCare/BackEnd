@@ -32,7 +32,16 @@ public enum SuccessStatus implements BaseCode {
     SAVE_SCHEDULE(HttpStatus.OK, "SCHEDULE2000", "특수 일정 생성 성공"),
     GET_SCHEDULE(HttpStatus.OK, "SCHEDULE2001", "특수 일정 조회 성공"),
     PUT_SCHEDULE(HttpStatus.OK, "SCHEDULE2002", "특수 일정 수정 성공"),
-    DELETE_SCHEDULE(HttpStatus.OK, "SCHDULE2003", "특수 일정 삭제 성공");
+    DELETE_SCHEDULE(HttpStatus.OK, "SCHDULE2003", "특수 일정 삭제 성공"),
+
+    //Diary
+    GET_DIARY(HttpStatus.OK, "DIARY2000", "감정일기 확인 성공"),
+
+    //Report
+    GET_REPORT(HttpStatus.OK, "REPORT2000", "감정 리포트확인 성공"),
+
+    //통계페이지..?
+    GET_STATISTICS(HttpStatus.OK, "STATISTICS2000", "통계페이지 확인 성공");
 
 
     private final HttpStatus httpStatus;

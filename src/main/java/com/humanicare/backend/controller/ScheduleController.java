@@ -28,15 +28,16 @@ public class ScheduleController {
     @Operation(summary = "모든 특수 일정 가져오기")
     public ApiResponse<List<ScheduleDto.ScheduleSimpleDto>> getAllSpecificSchedule(@RequestHeader("Authorization") final String authorizationHeader,
                                                                                 @RequestParam LocalDate date) {
-        List<Schedule> schedules = ScheduleService.getAllSchedule(date);
+        List<Schedule> schedules = scheduleService.getAllSchedule(date);
         return ApiResponse.of(SuccessStatus.GET_SCHEDULE,
                 ScheduleConverter.toScheduleDtoList(schedules));
     }
 
-    @GetMapping("/schedules")
+    @GetMapping("/schedules/{id}")
     @Operation(summary = "하나의 특수 일정 가져오기")
-    public ApiResponse<ScheduleDto.ScheduleDescriptionDto> getSpecificSchedule(@RequestHeader("Authorization") final String authorizationHeader) {
-        Schedule schedule = ScheduleService.getSchedule();
+    public ApiResponse<ScheduleDto.ScheduleDescriptionDto> getSpecificSchedule(@RequestHeader("Authorization") final String authorizationHeader,
+                                                                               @PathVariable Long id) {
+        Schedule schedule = scheduleService.getSchedule(id);
         return ApiResponse.of(SuccessStatus.GET_SCHEDULE,
                 ScheduleConverter.toScheduleDto(schedule));
     }

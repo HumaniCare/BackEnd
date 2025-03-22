@@ -11,11 +11,11 @@ import java.util.List;
 @Service
 public class ScheduleService {
 
-    public static List<Schedule> getAllSchedule(LocalDate date) {
-        return new ArrayList<>();
+    public List<Schedule> getAllSchedule(LocalDate date) {
+        return null;
     }
 
-    public static Schedule getSchedule() {
+    public Schedule getSchedule(Long id) {
         return Schedule.builder().build();
     }
 
