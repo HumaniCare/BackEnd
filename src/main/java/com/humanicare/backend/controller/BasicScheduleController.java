@@ -51,9 +51,8 @@ public class BasicScheduleController {
     @Operation(summary = "기본 일정 수정하기")
     public ApiResponse<BasicScheduleDto.ScheduleDto> updateBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
                                                  @RequestBody BasicScheduleDto.ScheduleDto scheduleDto) {
-        BasicSchedule schedule = basicScheduleService.updateSchedule(scheduleDto);
-        return ApiResponse.of(SuccessStatus.PUT_BASIC_SCHEDULE,
-                BasicScheduleConverter.toBasicScheduleDto(schedule));
+        basicScheduleService.updateSchedule(scheduleDto);
+        return ApiResponse.ofNoting(SuccessStatus.PUT_BASIC_SCHEDULE);
     }
 
     @DeleteMapping("/basic-schedules")

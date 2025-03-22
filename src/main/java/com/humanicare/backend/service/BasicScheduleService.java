@@ -22,13 +22,14 @@ public class BasicScheduleService {
     }
 
     public void createSchedule(BasicScheduleDto.ScheduleDto scheduleDto) {
-        return;
+
     }
 
-    public BasicSchedule updateSchedule(BasicScheduleDto.ScheduleDto scheduleDto) {
-        return BasicSchedule.builder().build();
+    public void updateSchedule(BasicScheduleDto.ScheduleDto scheduleDto) {
+
     }
 
     public void deleteSchedule(BasicScheduleDto.ScheduleDto scheduleDto) {
+
     }
 }
