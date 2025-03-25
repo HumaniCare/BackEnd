@@ -24,10 +24,18 @@ public class BasicScheduleConverter {
 
     public static BasicSchedule toBasicSchedule(final User user, final BasicScheduleDto.ScheduleDto dto) {
         return BasicSchedule.builder()
-                .id(dto.getId())
                 .scheduleTitle(dto.getScheduleTitle())
                 .startTime(dto.getStartTime())
                 .user(user)
+                .build();
+    }
+
+    //Delete를 위해 사용
+    public static BasicSchedule toBasicSchedule(final BasicScheduleDto.ScheduleDto dto) {
+        return BasicSchedule.builder()
+                .id(dto.getId())
+                .scheduleTitle(dto.getScheduleTitle())
+                .startTime(dto.getStartTime())
                 .build();
     }
 
