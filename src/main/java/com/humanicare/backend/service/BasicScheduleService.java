@@ -31,8 +31,9 @@ public class BasicScheduleService {
         }
     }
 
-    public List<BasicSchedule> getAllSchedule() {
-        return basicScheduleRepository.findAll();
+    public List<BasicSchedule> getAllSchedule(String accessToken) {
+        User user = userCheckService.getUserByToken(accessToken);
+        return basicScheduleRepository.findByUser(user);
     }
 
 
