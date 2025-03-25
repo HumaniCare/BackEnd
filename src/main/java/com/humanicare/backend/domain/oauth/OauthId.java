@@ -10,6 +10,8 @@ import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
@@ -33,5 +35,19 @@ public class OauthId {
 
     public OauthServerType oauthServer() {
         return oauthServerType;
+    }
+
+    //respository에서 findBy를 할 때 객체 비교를 정확하게 수행할 수 있다.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OauthId that)) return false;
+        return Objects.equals(oauthServerId, that.oauthServerId)
+                && oauthServerType == that.oauthServerType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(oauthServerId, oauthServerType);
     }
 }

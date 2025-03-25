@@ -49,7 +49,7 @@ public class OauthController {
             @RequestParam("code") final String code,
             final HttpServletResponse response
     ) {
-        log.info("🔹 Received authCode: {}", code);
+        log.info("Received authCode: {}", code);
         User user = oauthService.login(response, oauthServerType, code);
         return ApiResponse.of(SuccessStatus.OAUTH_LOGIN, user.getRole());
     }

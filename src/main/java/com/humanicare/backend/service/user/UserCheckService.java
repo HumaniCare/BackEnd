@@ -4,6 +4,7 @@ import com.humanicare.backend.apiPayload.code.status.ErrorStatus;
 import com.humanicare.backend.apiPayload.exception.handler.UserHandler;
 import com.humanicare.backend.domain.oauth.User;
 import com.humanicare.backend.jwt.service.JwtService;
+import com.humanicare.backend.oauth.OauthServerType;
 import com.humanicare.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,9 @@ public class UserCheckService {
     private final UserRepository userRepository;
 
     public User getUserByToken(final String accessToken) {
-        String email = jwtService.extractEmail(accessToken).orElse(null);
-        User user = userRepository.findByEmail(email).orElse(null);
+        String oauthId = jwtService.extractOauthId(accessToken).orElse(null);
+        OauthServerType serverType = jwtService.extractOauthServerType(accessToken).orElse(null);
+        User user = userRepository.findByOauthId_OauthServerIdAndOauthId_OauthServerType(oauthId, serverType).orElse(null);
         validateUserIsNotNull(user);
         return user;
     }

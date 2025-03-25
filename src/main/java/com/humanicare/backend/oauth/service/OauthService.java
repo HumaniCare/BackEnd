@@ -36,12 +36,13 @@ public class OauthService {
         User user = oauthUserClientComposite.fetch(oauthServerType, authCode);
         User saved = userRepository.findByOauthId(user.getOauthId()).orElseGet(() -> userRepository.save(user));
 
-        String accessToken = jwtService.createAccessToken(user.getEmail());
+        String accessToken = jwtService.createAccessToken(saved.getOauthId().oauthServerId(), saved.getOauthId().oauthServer());
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-//        jwtService.updateRefreshToken(user.getEmail(), refreshToken);
+        jwtService.updateRefreshToken(saved.getOauthId().oauthServerId(), saved.getOauthId().oauthServer(), refreshToken);
 
+        log.info("refreshToken value: {}", refreshToken);
         log.info("사용자 로그인 완료");
         return saved;
     }
