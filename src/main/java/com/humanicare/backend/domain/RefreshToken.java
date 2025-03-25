@@ -1,5 +1,6 @@
 package com.humanicare.backend.domain;
 
+import com.humanicare.backend.oauth.OauthServerType;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +25,11 @@ public class RefreshToken {
     @Column(name = "refresh_token_id")
     private Long id;
 
-    private String email;
+    @Indexed
+    private String oauthId;
+
+    @Indexed
+    private OauthServerType oauthServerType;
 
     @Indexed
     private String refresh;

@@ -1,3 +1,4 @@
+// JwtAuthenticationProcessingFilter.java
 package com.humanicare.backend.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -5,6 +6,7 @@ import com.humanicare.backend.domain.oauth.User;
 import com.humanicare.backend.exception.TokenInvalidException;
 import com.humanicare.backend.jwt.service.JwtService;
 import com.humanicare.backend.jwt.util.PasswordUtil;
+import com.humanicare.backend.oauth.OauthServerType;
 import com.humanicare.backend.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,13 +26,6 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-
-/**
- * Jwt 인증 필터 로그인 이외의 URI 요청이 왔을 때 처리하는 필터
- * <p>
- * AccessToken 유효성 검사를 진행하고 유효하지 않으면 프론트로 에러 메시지를 보낸다. 프론트에서 에러 메시지를 받으면 재발급 API CALL
- */
 
 @RequiredArgsConstructor
 @Slf4j
@@ -62,11 +57,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         checkAccessTokenAndAuthentication(request, response, filterChain);
     }
 
-    /**
-     * [AccessToken 체크 & 인증 처리 메소드] request에서 extractAccessToken()으로 AccessToken 추출 후, isTokenValid()로 유효한 토큰인지 검증 유효한
-     * 토큰이면, AccessToken서 extractEmail로 Email을 추출한 후 findByEmail()로 해당 이메일을 사용하는 유저 객체 반환 그 유저 객체를
-     * saveAuthentication()으로 인증 처리하여 인증 허가 처리된 객체를 SecurityContextHolder에 담기 그 후 다음 인증 필터로 진행
-     */
     public void checkAccessTokenAndAuthentication(final HttpServletRequest request, final HttpServletResponse response,
                                                   final FilterChain filterChain) throws IOException, ServletException {
         if (isSwaggerPath(request)) {
@@ -83,9 +73,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         try {
             jwtService.isTokenValid(accessToken);
-            jwtService.extractEmail(accessToken)
-                    .flatMap(userRepository::findByEmail)
-                    .ifPresent(this::saveAuthentication);
+            var oauthIdOpt = jwtService.extractOauthId(accessToken);
+            var providerOpt = jwtService.extractOauthServerType(accessToken);
+
+            if (oauthIdOpt.isPresent() && providerOpt.isPresent()) {
+                userRepository.findByOauthId_OauthServerIdAndOauthId_OauthServerType(
+                        oauthIdOpt.get(), providerOpt.get()
+                ).ifPresent(this::saveAuthentication);
+            } else {
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "토큰 정보가 부족합니다.");
+                return;
+            }
         } catch (TokenInvalidException e) {
             sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             return;
@@ -96,19 +94,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * [인증 허가 메소드] 파라미터의 유저 : 우리가 만든 회원 객체 / 빌더의 유저 : UserDetails의 User 객체
-     * <p>
-     * new UsernamePasswordAuthenticationToken()로 인증 객체인 Authentication 객체 생성 UsernamePasswordAuthenticationToken의 파라미터
-     * 1. 위에서 만든 UserDetailsUser 객체 (유저 정보) 2. credential(보통 비밀번호로, 인증 시에는 보통 null로 제거) 3. Collection < ? extends
-     * GrantedAuthority>로, UserDetails의 User 객체 안에 Set<GrantedAuthority> authorities이 있어서 getter로 호출한 후에, new
-     * NullAuthoritiesMapper()로 GrantedAuthoritiesMapper 객체를 생성하고 mapAuthorities()에 담기
-     * <p>
-     * SecurityContextHolder.getContext()로 SecurityContext를 꺼낸 후, setAuthentication()을 이용하여 위에서 만든 Authentication 객체에 대한
-     * 인증 허가 처리
-     */
     public void saveAuthentication(final User user) {
-
         UserDetails userDetailsUser = getUserDetails(user);
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,
@@ -135,7 +121,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .build();
     }
 
-    // 오류 정보 {status, message}를 JSON 형태로 바꿔서 응답
     private void sendErrorResponse(final HttpServletResponse response, final int statusCode, final String message)
             throws IOException {
         response.setStatus(statusCode);
