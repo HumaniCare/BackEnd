@@ -28,7 +28,8 @@ public class BasicScheduleController {
     @GetMapping("/all-basic-schedules")
     @Operation(summary = "모든 기본 일정 가져오기")
     public ApiResponse<List<BasicScheduleDto.ScheduleDto>> getAllBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader) {
-        List<BasicSchedule> schedules = basicScheduleService.getAllSchedule();
+        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
+        List<BasicSchedule> schedules = basicScheduleService.getAllSchedule(accessToken);
         return ApiResponse.of(SuccessStatus.GET_BASIC_SCHEDULE,
                 BasicScheduleConverter.toScheduleDtoList(schedules));
     }

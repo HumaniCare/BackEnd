@@ -20,11 +20,16 @@ public class BasicSchedule extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String scheduleTitle;
     private LocalTime startTime;
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void changeSchedule(String title, LocalTime time) {
+        this.scheduleTitle = title;
+        this.startTime = time;
+    }
 }

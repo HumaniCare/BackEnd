@@ -2,6 +2,7 @@ package com.humanicare.backend.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalTime;
 
@@ -10,6 +11,7 @@ public class BasicScheduleDto {
     @Getter
     @Builder
     public static class ScheduleDto {
+        @Setter
         private Long id;
         private String scheduleTitle;
         private LocalTime startTime;

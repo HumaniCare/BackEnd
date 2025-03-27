@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -20,11 +21,11 @@ public class Schedule extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "schedule_title", unique = true)
+    @Column(name = "schedule_title")
     private String scheduleTitle;
 
     @Column(name = "start_time", unique = true)
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     @Column
     private String description;
@@ -32,4 +33,10 @@ public class Schedule extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void changeSchedule(String title, LocalDateTime time, String description) {
+        this.scheduleTitle = title;
+        this.startTime = time;
+        this.description = description;
+    }
 }

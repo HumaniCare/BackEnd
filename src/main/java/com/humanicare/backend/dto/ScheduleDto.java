@@ -2,7 +2,9 @@ package com.humanicare.backend.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ScheduleDto {
@@ -13,12 +15,12 @@ public class ScheduleDto {
     public static class ScheduleSimpleDto {
         private Long id;
         private String scheduleTitle;
-        private LocalTime startTime;
+        private LocalDateTime startTime;
 
         public ScheduleSimpleDto() {
         }
 
-        public ScheduleSimpleDto(Long id, String scheduleTitle, LocalTime startTime) {
+        public ScheduleSimpleDto(Long id, String scheduleTitle, LocalDateTime startTime) {
             this.id = id;
             this.scheduleTitle = scheduleTitle;
             this.startTime = startTime;
@@ -29,19 +31,21 @@ public class ScheduleDto {
     @Getter
     @Builder
     public static class ScheduleDescriptionDto {
+        @Setter
         private Long id;
         private String scheduleTitle;
-        private LocalTime startTime;
+        private LocalDateTime startTime;
         private String description;
 
         public ScheduleDescriptionDto() {
         }
 
-        public ScheduleDescriptionDto(Long id, String scheduleTitle, LocalTime startTime, String description) {
+        public ScheduleDescriptionDto(Long id, String scheduleTitle, LocalDateTime startTime, String description) {
             this.id = id;
             this.scheduleTitle = scheduleTitle;
             this.startTime = startTime;
             this.description = description;
         }
+
     }
 }
