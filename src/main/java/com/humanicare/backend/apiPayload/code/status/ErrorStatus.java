@@ -31,7 +31,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4002", "해당 유저가 없습니다"),
 
     //BasicSchedule 관련 응답
-    _BASIC_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "BASICSCHEDULE4001", "해당 스케쥴이 없습니다.");
+    _BASIC_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "BASICSCHEDULE4001", "해당 스케쥴이 없습니다."),
+
+    // Schedule 관련 응답
+    _SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "SCHEDULE4001", "해당 스케쥴이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
