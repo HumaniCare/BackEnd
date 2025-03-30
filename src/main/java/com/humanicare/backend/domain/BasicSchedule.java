@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,12 +25,17 @@ public class BasicSchedule extends BaseEntity{
     private String scheduleTitle;
     private LocalTime startTime;
 
+    @ElementCollection(targetClass = Day.class)
+    private List<Day> days;
+    @Enumerated(EnumType.STRING)
+
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void changeSchedule(String title, LocalTime time) {
+    public void changeSchedule(String title, LocalTime time, List<Day> days) {
         this.scheduleTitle = title;
         this.startTime = time;
+        this.days = days;
     }
 }

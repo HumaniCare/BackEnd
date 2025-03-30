@@ -52,15 +52,15 @@ public class BasicScheduleService {
         basicScheduleRepository.save(BasicScheduleConverter.toBasicSchedule(user, scheduleDto));
     }
 
-    @Transactional
-    public void updateSchedule(String accessToken, BasicScheduleDto.ScheduleDto scheduleDto, Long id) {
-        User user = userCheckService.getUserByToken(accessToken);
-        BasicSchedule original = basicScheduleRepository.findById(id)
-                .orElseThrow(() -> new BasicScheduleHandler(ErrorStatus._BASIC_SCHEDULE_NOT_FOUND)); // ② 기존 일정 조회
-
-        checkValidUser(original, user);
-        original.changeSchedule(scheduleDto.getScheduleTitle(), scheduleDto.getStartTime());
-    }
+//    @Transactional
+//    public void updateSchedule(String accessToken, BasicScheduleDto.ScheduleDto scheduleDto, Long id) {
+//        User user = userCheckService.getUserByToken(accessToken);
+//        BasicSchedule original = basicScheduleRepository.findById(id)
+//                .orElseThrow(() -> new BasicScheduleHandler(ErrorStatus._BASIC_SCHEDULE_NOT_FOUND)); // ② 기존 일정 조회
+//
+//        checkValidUser(original, user);
+//        original.changeSchedule(scheduleDto.getScheduleTitle(), scheduleDto.getStartTime());
+//    }
 
     public void deleteSchedule(String accessToken, Long id) {
         User currentUser = userCheckService.getUserByToken(accessToken);
