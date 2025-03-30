@@ -17,7 +17,8 @@ public class BasicScheduleConverter {
                 .map(schedule -> new BasicScheduleDto.ScheduleDto(
                         schedule.getId(),
                         schedule.getScheduleTitle(),
-                        schedule.getStartTime()
+                        schedule.getStartTime(),
+                        schedule.getDays()
                 ))
                 .collect(Collectors.toList());
     }
@@ -26,16 +27,8 @@ public class BasicScheduleConverter {
         return BasicSchedule.builder()
                 .scheduleTitle(dto.getScheduleTitle())
                 .startTime(dto.getStartTime())
+                .days(dto.getDays())
                 .user(user)
-                .build();
-    }
-
-    //Delete를 위해 사용
-    public static BasicSchedule toBasicSchedule(final BasicScheduleDto.ScheduleDto dto) {
-        return BasicSchedule.builder()
-                .id(dto.getId())
-                .scheduleTitle(dto.getScheduleTitle())
-                .startTime(dto.getStartTime())
                 .build();
     }
 
@@ -44,6 +37,7 @@ public class BasicScheduleConverter {
                 .id(schedule.getId())
                 .scheduleTitle(schedule.getScheduleTitle())
                 .startTime(schedule.getStartTime())
+                .days(schedule.getDays())
                 .build();
     }
 
