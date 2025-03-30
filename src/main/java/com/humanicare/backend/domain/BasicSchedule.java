@@ -26,8 +26,8 @@ public class BasicSchedule extends BaseEntity{
     private LocalTime startTime;
 
     @ElementCollection(targetClass = Day.class)
-    private List<Day> days;
     @Enumerated(EnumType.STRING)
+    private List<Day> days;
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
     @JoinColumn(name = "user_id")
