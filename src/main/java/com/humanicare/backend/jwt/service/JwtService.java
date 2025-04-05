@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 @Getter
 @Slf4j
@@ -50,6 +50,20 @@ public class JwtService {
     private String accessHeader;
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
+
+    /**
+     * Lombok의 RequiredArgsConstructor의 경우 @Qualifier가 생성자 parameter로 복사되지 않을 수 있음.
+     * NoUniqueBeanDefinitionException 발생 가능.
+     * @param redisTemplate
+     * @param userRepository
+     */
+    public JwtService(@Qualifier("redisTemplate") RedisTemplate<String, Object> redisTemplate,
+                      UserRepository userRepository) {
+        this.redisTemplate = redisTemplate;
+        this.userRepository = userRepository;
+    }
+
+
 
     /**
      * Swagget 용 Test Token생성

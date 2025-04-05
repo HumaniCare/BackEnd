@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,7 +37,7 @@ public class RedisConfig {
     /**
      * JWT RedisTemplate - 토큰 저장에 사용됨
      */
-    @Bean(name = "jwtRedisTemplate")
+    @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> jwtRedisTemplate(
             @Qualifier("jwtRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
 
@@ -51,20 +52,20 @@ public class RedisConfig {
     // -------------------------------
 
     /**
-     * FastAPI 공유용 Redis 연결 팩토리 (spring.data.redis.shared.* 값을 기반으로 생성됨)
+     * FastAPI 공유용 Redis 연결 팩토리 (spring.data.redis.schedule.* 값을 기반으로 생성됨)
      */
-    @Bean(name = "sharedRedisConnectionFactory")
-    @ConfigurationProperties(prefix = "spring.data.redis.shared")
-    public LettuceConnectionFactory sharedRedisConnectionFactory() {
+    @Bean(name = "scheduleRedisConnectionFactory")
+    @ConfigurationProperties(prefix = "spring.data.redis.schedule")
+    public LettuceConnectionFactory scheduleRedisConnectionFactory() {
         return new LettuceConnectionFactory();
     }
 
     /**
      * FastAPI와 공유할 RedisTemplate - 데이터 연동 및 메시지 전달에 사용됨
      */
-    @Bean(name = "sharedRedisTemplate")
-    public RedisTemplate<String, Object> sharedRedisTemplate(
-            @Qualifier("sharedRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
+    @Bean(name = "scheduleRedisTemplate")
+    public RedisTemplate<String, Object> scheduleRedisTemplate(
+            @Qualifier("scheduleRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
