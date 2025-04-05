@@ -1,5 +1,8 @@
 package com.humanicare.backend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -83,10 +86,19 @@ public class RedisConfig {
      * - Value: JSON 직렬화 (객체 저장 시 사용)
      */
     private void configureSerializers(RedisTemplate<String, Object> template) {
-        template.setKeySerializer(new StringRedisSerializer()); // 키는 항상 문자열
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // 객체 저장 시 JSON 변환
+        // ✅ Java 8 LocalTime, LocalDateTime 지원을 위한 ObjectMapper 구성
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // 핵심
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // ✅ 수정된 JSON 직렬화기
+        GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(jsonSerializer);
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new StringRedisSerializer());
-        template.setDefaultSerializer(new StringRedisSerializer()); // 모든 기본값은 문자열
+        template.setHashValueSerializer(jsonSerializer);
+        template.setDefaultSerializer(jsonSerializer); // 기본값도 JSON 직렬화기로 맞춤
     }
+
 }
