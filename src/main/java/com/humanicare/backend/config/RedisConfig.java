@@ -1,6 +1,7 @@
 package com.humanicare.backend.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,38 +10,82 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * RedisConfig
+ *
+ * - JWT 전용 Redis (인증, 토큰 저장 등)
+ * - FastAPI와 공유하는 Redis (데이터 연동)
+ * 두 개의 Redis 인스턴스를 사용하는 설정 클래스입니다.
+ */
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
+    // -------------------------------
+    // ✅ JWT 전용 Redis 설정
+    // -------------------------------
 
-    @Value("${spring.data.redis.port}")
-    private int port;
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+    /**
+     * JWT Redis용 연결 팩토리 (spring.data.redis.jwt.* 값을 기반으로 생성됨)
+     */
+    @Bean(name = "jwtRedisConnectionFactory")
+    @ConfigurationProperties(prefix = "spring.data.redis.jwt")
+    public LettuceConnectionFactory jwtRedisConnectionFactory() {
+        return new LettuceConnectionFactory();
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+    /**
+     * JWT RedisTemplate - 토큰 저장에 사용됨
+     */
+    @Bean(name = "jwtRedisTemplate")
+    public RedisTemplate<String, Object> jwtRedisTemplate(
+            @Qualifier("jwtRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
 
-        // 일반적인 key:value의 경우 시리얼라이저
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        // Value를 JSON 형식으로 직렬화
-        redisTemplate.setValueSerializer(
-                new GenericJackson2JsonRedisSerializer()); // refreshToken을 JSON으로 직렬화 해야 꺼낼 때도 RefreshToken 객체로 cast 가능하다.
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        configureSerializers(template); // 직렬화 설정 공통 메서드
+        return template;
+    }
 
-        // Hash를 사용할 경우 시리얼라이저
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+    // -------------------------------
+    // ✅ FastAPI 연동용 Redis 설정
+    // -------------------------------
 
-        // 모든 경우
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
+    /**
+     * FastAPI 공유용 Redis 연결 팩토리 (spring.data.redis.shared.* 값을 기반으로 생성됨)
+     */
+    @Bean(name = "sharedRedisConnectionFactory")
+    @ConfigurationProperties(prefix = "spring.data.redis.shared")
+    public LettuceConnectionFactory sharedRedisConnectionFactory() {
+        return new LettuceConnectionFactory();
+    }
 
-        return redisTemplate;
+    /**
+     * FastAPI와 공유할 RedisTemplate - 데이터 연동 및 메시지 전달에 사용됨
+     */
+    @Bean(name = "sharedRedisTemplate")
+    public RedisTemplate<String, Object> sharedRedisTemplate(
+            @Qualifier("sharedRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        configureSerializers(template); // 직렬화 설정 공통 메서드
+        return template;
+    }
+
+    // -------------------------------
+    // 🔄 공통 직렬화 설정 메서드
+    // -------------------------------
+
+    /**
+     * RedisTemplate 직렬화 공통 설정
+     * - Key: 문자열
+     * - Value: JSON 직렬화 (객체 저장 시 사용)
+     */
+    private void configureSerializers(RedisTemplate<String, Object> template) {
+        template.setKeySerializer(new StringRedisSerializer()); // 키는 항상 문자열
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // 객체 저장 시 JSON 변환
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+        template.setDefaultSerializer(new StringRedisSerializer()); // 모든 기본값은 문자열
     }
 }
