@@ -27,6 +27,7 @@ public class BasicSchedule extends BaseEntity{
 
     @ElementCollection(targetClass = Day.class)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private List<Day> days;
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
