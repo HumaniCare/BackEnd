@@ -33,6 +33,7 @@ public class BasicScheduleConverter {
     }
 
     public static BasicScheduleDto.ScheduleDto toBasicScheduleDto(final BasicSchedule schedule) {
+
         return BasicScheduleDto.ScheduleDto.builder()
                 .id(schedule.getId())
                 .scheduleTitle(schedule.getScheduleTitle())
