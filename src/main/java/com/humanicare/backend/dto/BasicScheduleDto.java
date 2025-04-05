@@ -4,6 +4,7 @@ import com.humanicare.backend.domain.Day;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -12,6 +13,7 @@ public class BasicScheduleDto {
 
     @Getter
     @Builder
+    @ToString
     public static class ScheduleDto {
         @Setter
         private Long id;
