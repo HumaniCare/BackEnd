@@ -34,7 +34,7 @@ public record KakaoMemberResponse(
                 .name(kakaoAccount.profile.nickname)
 //                .email(kakaoAccount.email)
                 .invitationCode(invitationCode)
-                .role(Role.GUEST)
+                .role(Role.FIRST)
                 .build();
     }
 

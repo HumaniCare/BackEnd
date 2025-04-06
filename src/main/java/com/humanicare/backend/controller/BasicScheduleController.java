@@ -29,15 +29,6 @@ public class BasicScheduleController {
 
     private final BasicScheduleService basicScheduleService;
 
-    @PostMapping("/debug")
-    public void debug(@RequestBody String json) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-        BasicScheduleDto.ScheduleDto dto = mapper.readValue(json, BasicScheduleDto.ScheduleDto.class);
-        System.out.println("✅ 수동 파싱 성공: " + dto);
-    }
-
     @GetMapping("/all-basic-schedules")
     @Operation(summary = "모든 기본 일정 가져오기")
     public ApiResponse<List<BasicScheduleDto.ScheduleDto>> getAllBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader) {
@@ -68,7 +59,7 @@ public class BasicScheduleController {
 
     @PutMapping("/basic-schedules")
     @Operation(summary = "기본 일정 수정하기")
-    public ApiResponse<BasicScheduleDto.ScheduleDto> updateBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
+    public ApiResponse<Void> updateBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
                                                  @RequestBody BasicScheduleDto.ScheduleDto scheduleDto, @RequestParam("scheduleId") final Long id) {
         String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
         basicScheduleService.updateSchedule(accessToken, scheduleDto, id);

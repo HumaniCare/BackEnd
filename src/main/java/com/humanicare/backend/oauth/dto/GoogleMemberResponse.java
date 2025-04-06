@@ -26,7 +26,7 @@ public record GoogleMemberResponse(
                 .oauthId(new OauthId(id, GOOGLE))
                 .email(email)
                 .name(name)
-                .role(Role.GUEST)
+                .role(Role.FIRST)
                 .build();
     }
 }

@@ -24,7 +24,7 @@ public record NaverMemberResponse(
                 .oauthId(new OauthId(String.valueOf(response.id), NAVER))
                 .name(response.name)
                 .email(response.email)
-                .role(Role.GUEST)
+                .role(Role.FIRST)
                 .build();
     }
 
