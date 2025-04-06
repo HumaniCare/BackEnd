@@ -2,63 +2,63 @@ INSERT INTO user(created_at, email, name, oauth_server_id, voice_url, oauth_serv
 VALUES ('2024-11-14-00:01:04', 'test@example.com', 'test', 'test-oauth-id-1',
         'https://peachmentor-bucket.s3.ap-northeast-2.amazonaws.com/record/audio_1733417068_d5f0daee-1692-4616-a269-791a9fdcafd0.wav',
         'KAKAO', 'USER');
--- BasicSchedule 데이터 삽입
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (1, '일정 15:02', '15:02:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (2, '일정 15:00', '15:00:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (3, '일정 14:55', '14:55:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (4, '일정 14:40', '14:40:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (5, '일정 14:32', '14:32:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (6, '일정 14:55', '13:55:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (7, '일정 13:56', '13:56:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (8, '일정 13:57', '13:57:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (9, '일정 13:58', '13:58:00', 1);
-
-INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
-VALUES (10, '일정 13:59', '13:59:00', 1);
-
--- 일정 1: MONDAY, TUESDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (1, 'MONDAY');
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (1, 'TUESDAY');
-
--- 일정 2: WEDNESDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (2, 'WEDNESDAY');
-
--- 일정 3: THURSDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (3, 'THURSDAY');
-
--- 일정 4: FRIDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (4, 'FRIDAY');
-
--- 일정 5: MONDAY, FRIDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (5, 'MONDAY');
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (5, 'FRIDAY');
-
--- 일정 6: TUESDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (6, 'TUESDAY');
-
--- 일정 7: WEDNESDAY, SUNDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (7, 'WEDNESDAY');
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (7, 'SUNDAY');
-
--- 일정 8: SATURDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (8, 'SATURDAY');
-
--- 일정 9: SUNDAY
-INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (9, 'SUNDAY');
+-- -- BasicSchedule 데이터 삽입
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (1, '일정 15:02', '15:02:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (2, '일정 15:00', '15:00:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (3, '일정 14:55', '14:55:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (4, '일정 14:40', '14:40:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (5, '일정 14:32', '14:32:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (6, '일정 14:55', '13:55:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (7, '일정 13:56', '13:56:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (8, '일정 13:57', '13:57:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (9, '일정 13:58', '13:58:00', 1);
+--
+-- INSERT INTO basic_schedule (schedule_id, schedule_title, start_time, user_id)
+-- VALUES (10, '일정 13:59', '13:59:00', 1);
+--
+-- -- 일정 1: MONDAY, TUESDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (1, 'MONDAY');
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (1, 'TUESDAY');
+--
+-- -- 일정 2: WEDNESDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (2, 'WEDNESDAY');
+--
+-- -- 일정 3: THURSDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (3, 'THURSDAY');
+--
+-- -- 일정 4: FRIDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (4, 'FRIDAY');
+--
+-- -- 일정 5: MONDAY, FRIDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (5, 'MONDAY');
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (5, 'FRIDAY');
+--
+-- -- 일정 6: TUESDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (6, 'TUESDAY');
+--
+-- -- 일정 7: WEDNESDAY, SUNDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (7, 'WEDNESDAY');
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (7, 'SUNDAY');
+--
+-- -- 일정 8: SATURDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (8, 'SATURDAY');
+--
+-- -- 일정 9: SUNDAY
+-- INSERT INTO basic_schedule_days (basic_schedule_schedule_id, days) VALUES (9, 'SUNDAY');

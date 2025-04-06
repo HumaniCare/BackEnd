@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,16 +47,31 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+    protected void doFilterInternal(final HttpServletRequest request,
+                                    final HttpServletResponse response,
                                     final FilterChain filterChain)
             throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+        log.info("🔍 [JWT 필터 진입] 요청 URI: {}", requestURI);
+
         if (isSwaggerPath(request) || isNotApplyJwtPath(request)) {
-            log.debug("JWT Authentication Filter Skip");
+            log.info("✅ [JWT 필터 스킵] 경로: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
-        checkAccessTokenAndAuthentication(request, response, filterChain);
+
+        try {
+            log.info("🔐 [JWT 검사 시작]");
+            checkAccessTokenAndAuthentication(request, response, filterChain);
+            log.info("✅ [JWT 검사 통과]");
+        } catch (Exception e) {
+            log.error("❌ [JWT 검사 실패] 에러: {}", e.getMessage(), e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("JWT 필터 오류 발생");
+        }
     }
+
 
     public void checkAccessTokenAndAuthentication(final HttpServletRequest request, final HttpServletResponse response,
                                                   final FilterChain filterChain) throws IOException, ServletException {
@@ -77,9 +93,16 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             var providerOpt = jwtService.extractOauthServerType(accessToken);
 
             if (oauthIdOpt.isPresent() && providerOpt.isPresent()) {
-                userRepository.findByOauthId_OauthServerIdAndOauthId_OauthServerType(
+                Optional<User> userOpt = userRepository.findByOauthId_OauthServerIdAndOauthId_OauthServerType(
                         oauthIdOpt.get(), providerOpt.get()
-                ).ifPresent(this::saveAuthentication);
+                );
+
+                if (userOpt.isPresent()) {
+                    saveAuthentication(userOpt.get());
+                } else {
+                    sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "유효한 유저를 찾을 수 없습니다.");
+                    return;
+                }
             } else {
                 sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "토큰 정보가 부족합니다.");
                 return;
@@ -88,6 +111,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             return;
         } catch (RuntimeException e) {
+            log.error("❗ RuntimeException 발생: {}", e.getMessage(), e);
             sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "토큰 오류 : " + e.getMessage());
             return;
         }
@@ -115,7 +139,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private UserDetails getUserDetails(final User user) {
         String password = PasswordUtil.generateRandomPassword();
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
+                .username(user.getName())
                 .password(password)
                 .roles(user.getRole().name())
                 .build();

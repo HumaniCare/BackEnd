@@ -1,5 +1,7 @@
 package com.humanicare.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.humanicare.backend.apiPayload.ApiResponse;
 import com.humanicare.backend.apiPayload.code.status.SuccessStatus;
 import com.humanicare.backend.converter.BasicScheduleConverter;
@@ -11,6 +13,7 @@ import com.humanicare.backend.service.BasicScheduleService;
 import com.humanicare.backend.service.user.UserCheckService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +24,19 @@ import static com.humanicare.backend.constant.Constants.ACCESS_TOKEN_REPLACEMENT
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/spring")
+@Slf4j
 public class BasicScheduleController {
 
     private final BasicScheduleService basicScheduleService;
+
+    @PostMapping("/debug")
+    public void debug(@RequestBody String json) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        BasicScheduleDto.ScheduleDto dto = mapper.readValue(json, BasicScheduleDto.ScheduleDto.class);
+        System.out.println("✅ 수동 파싱 성공: " + dto);
+    }
 
     @GetMapping("/all-basic-schedules")
     @Operation(summary = "모든 기본 일정 가져오기")
@@ -47,6 +60,7 @@ public class BasicScheduleController {
     @Operation(summary = "기본 일정 생성하기", description = "기본적으로 여러 개를 생성할 수 있게 하자.")
     public ApiResponse<Void> createBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
                                                  @RequestBody List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
+        log.info("Create BasicSchedule");
         String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
         basicScheduleService.createSchedule(accessToken, scheduleDtos);
         return ApiResponse.ofNoting(SuccessStatus.SAVE_BASIC_SCHEDULE);

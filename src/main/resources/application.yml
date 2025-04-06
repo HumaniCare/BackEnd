@@ -23,9 +23,20 @@ spring:
 logging:
   level:
     org.hibernate.SQL: info
+    org.springframework.web: DEBUG
+    org.springframework.http.converter.json: DEBUG
+    com.fasterxml.jackson.databind: DEBUG
 
 
 server:
   servlet:
     session:
       timeout: 240
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always

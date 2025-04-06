@@ -26,16 +26,15 @@
         private String scheduleTitle;
         private LocalTime startTime;
 
-        @ElementCollection(targetClass = Day.class)
-        @Enumerated(EnumType.STRING)
-        @Column(nullable = false)
-        private List<Day> days = new ArrayList<>(); //기본값 설정할 때 java측 field가 null이 되는걸 방지하기 위해 new로 객체 생성
+        @ElementCollection
+        @Column(name = "day") // 컬럼 이름
+        private List<String> days;
 
         @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
         @JoinColumn(name = "user_id")
         private User user;
 
-        public void changeSchedule(String title, LocalTime time, List<Day> days) {
+        public void changeSchedule(String title, LocalTime time, List<String> days) {
             this.scheduleTitle = title;
             this.startTime = time;
             this.days = days;
