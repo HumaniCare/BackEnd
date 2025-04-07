@@ -1,34 +1,27 @@
 package com.humanicare.backend.dto;
 
-import com.humanicare.backend.domain.Day;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.time.LocalTime;
 import java.util.List;
 
 public class BasicScheduleDto {
 
+
     @Getter
+    @Setter
     @Builder
-    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ScheduleDto {
-        @Setter
+
         private Long id;
         private String scheduleTitle;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
         private LocalTime startTime;
-        private List<Day> days;
 
-        public ScheduleDto() {
-        }
-
-        public ScheduleDto(Long id, String scheduleTitle, LocalTime startTime, List<Day> days) {
-            this.id = id;
-            this.scheduleTitle = scheduleTitle;
-            this.startTime = startTime;
-            this.days = days;
-        }
+        private List<String> days;
     }
 }
