@@ -57,21 +57,21 @@ public class BasicScheduleController {
         return ApiResponse.ofNoting(SuccessStatus.SAVE_BASIC_SCHEDULE);
     }
 
-    @PutMapping("/basic-schedules")
-    @Operation(summary = "기본 일정 수정하기")
-    public ApiResponse<Void> updateBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
-                                                 @RequestBody BasicScheduleDto.ScheduleDto scheduleDto, @RequestParam("scheduleId") final Long id) {
-        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
-        basicScheduleService.updateSchedule(accessToken, scheduleDto, id);
-        return ApiResponse.ofNoting(SuccessStatus.PUT_BASIC_SCHEDULE);
-    }
-
-    @DeleteMapping("/basic-schedules")
-    @Operation(summary = "기본 일정 삭제하기")
-    public ApiResponse<Void> deleteBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
-                                                 @RequestParam("ScheduleId") final Long id) {
-        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
-        basicScheduleService.deleteSchedule(accessToken, id);
-        return ApiResponse.ofNoting(SuccessStatus.DELETE_BASIC_SCHEDULE);
-    }
+//    @PutMapping("/basic-schedules")
+//    @Operation(summary = "기본 일정 수정하기")
+//    public ApiResponse<Void> updateBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
+//                                                 @RequestBody BasicScheduleDto.ScheduleDto scheduleDto, @RequestParam("scheduleId") final Long id) {
+//        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
+//        basicScheduleService.updateSchedule(accessToken, scheduleDto, id);
+//        return ApiResponse.ofNoting(SuccessStatus.PUT_BASIC_SCHEDULE);
+//    }
+//
+//    @DeleteMapping("/basic-schedules")
+//    @Operation(summary = "기본 일정 삭제하기")
+//    public ApiResponse<Void> deleteBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
+//                                                 @RequestParam("ScheduleId") final Long id) {
+//        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
+//        basicScheduleService.deleteSchedule(accessToken, id);
+//        return ApiResponse.ofNoting(SuccessStatus.DELETE_BASIC_SCHEDULE);
+//    }
 }

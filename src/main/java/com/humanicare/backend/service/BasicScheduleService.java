@@ -10,12 +10,12 @@ import com.humanicare.backend.repository.BasicScheduleRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +24,8 @@ public class BasicScheduleService {
 
     private final BasicScheduleRepository basicScheduleRepository;
     private final UserCheckService userCheckService;
+    private final ApplicationContext applicationContext;
 
-    //BasicSchedule의 User id와 현재 로그인된 User의 id가 일치하지 않으면 Forbidden
-    private void checkValidUser(BasicSchedule schedule, User currentUser) {
-        if (!schedule.getUser().getId().equals(currentUser.getId())) {
-            throw new BasicScheduleHandler(ErrorStatus._FORBIDDEN);
-        }
-    }
 
     public List<BasicSchedule> getAllSchedule(String accessToken) {
         User user = userCheckService.getUserByToken(accessToken);
@@ -49,28 +44,39 @@ public class BasicScheduleService {
 
     public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
         User user = userCheckService.getUserByToken(accessToken);
-        for(BasicScheduleDto.ScheduleDto scheduleDto : scheduleDtos) {
-            basicScheduleRepository.save(BasicScheduleConverter.toBasicSchedule(user, scheduleDto));
+
+        // 기존 스케줄을 Map으로 구성
+        List<BasicSchedule> originSchedules = basicScheduleRepository.findByUser(user);
+        Map<String, BasicSchedule> originScheduleMap = originSchedules.stream()
+                .collect(Collectors.toMap(BasicSchedule::getScheduleTitle, s -> s));
+
+        Set<String> incomingTitles = new HashSet<>();
+
+        // 요청된 스케줄 처리 (create or update)
+        for (BasicScheduleDto.ScheduleDto dto : scheduleDtos) {
+            incomingTitles.add(dto.getScheduleTitle());
+
+            if (originScheduleMap.containsKey(dto.getScheduleTitle())) {
+                // update
+                BasicScheduleService proxy = applicationContext.getBean(BasicScheduleService.class);
+                proxy.updateSchedule(originScheduleMap.get(dto.getScheduleTitle()), dto);
+            } else {
+                // create
+                BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
+                basicScheduleRepository.save(newSchedule);
+            }
+        }
+
+        // 요청에서 빠진 기존 스케줄 삭제
+        for (BasicSchedule old : originSchedules) {
+            if (!incomingTitles.contains(old.getScheduleTitle())) {
+                basicScheduleRepository.delete(old);
+            }
         }
     }
 
     @Transactional
-    public void updateSchedule(String accessToken, BasicScheduleDto.ScheduleDto scheduleDto, Long id) {
-        User user = userCheckService.getUserByToken(accessToken);
-        BasicSchedule original = basicScheduleRepository.findById(id)
-                .orElseThrow(() -> new BasicScheduleHandler(ErrorStatus._BASIC_SCHEDULE_NOT_FOUND)); // ② 기존 일정 조회
-
-        checkValidUser(original, user);
-        original.changeSchedule(scheduleDto.getScheduleTitle(), scheduleDto.getStartTime(), scheduleDto.getDays());
-    }
-
-    public void deleteSchedule(String accessToken, Long id) {
-        User currentUser = userCheckService.getUserByToken(accessToken);
-        BasicSchedule schedule = basicScheduleRepository.findById(id)
-                .orElseThrow(() -> new BasicScheduleHandler(ErrorStatus._BASIC_SCHEDULE_NOT_FOUND));
-
-        checkValidUser(schedule, currentUser);
-
-        basicScheduleRepository.delete(schedule);
+    public void updateSchedule(BasicSchedule schedule, BasicScheduleDto.ScheduleDto scheduleDto) {
+        schedule.changeSchedule(scheduleDto.getScheduleTitle(), scheduleDto.getStartTime(), scheduleDto.getDays());
     }
 }
