@@ -9,12 +9,14 @@ import com.humanicare.backend.oauth.dto.KakaoMemberResponse;
 import com.humanicare.backend.oauth.dto.KakaoToken;
 import com.humanicare.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 
 /**
  * fetch 메소드에 대한 설명
@@ -49,6 +51,8 @@ public class KakaoUserClient implements OauthUserClient {
         params.add("redirect_uri", kakaoOauthConfig.redirectUri());
         params.add("code", authCode);
         params.add("client_secret", kakaoOauthConfig.clientSecret());
+        log.info("Token 요청 파라미터: code={}, redirect_uri={}, client_id={}, client_secret={}", authCode, kakaoOauthConfig.redirectUri(), kakaoOauthConfig.clientId(), kakaoOauthConfig.clientSecret());
+
         return params;
     }
 }
