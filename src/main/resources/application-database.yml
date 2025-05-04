@@ -26,10 +26,10 @@ spring:
   data:
     redis:
       jwt:
-        host: localhost
+        host: redis1
         port: 6379
         password: babyy1023@
       schedule:
-        host: localhost
+        host: redis2
         port: 6380
         password: babyy1023@
