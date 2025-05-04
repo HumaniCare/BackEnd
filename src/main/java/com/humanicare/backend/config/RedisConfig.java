@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +33,13 @@ public class RedisConfig {
      * JWT Redis용 연결 팩토리 (spring.data.redis.jwt.* 값을 기반으로 생성됨)
      */
     @Bean(name = "jwtRedisConnectionFactory")
-    @ConfigurationProperties(prefix = "spring.data.redis.jwt")
-    public LettuceConnectionFactory jwtRedisConnectionFactory() {
-        return new LettuceConnectionFactory();
+    public LettuceConnectionFactory jwtRedisConnectionFactory(
+            @Value("${spring.data.redis.jwt.host}") String host,
+            @Value("${spring.data.redis.jwt.port}") int port,
+            @Value("${spring.data.redis.jwt.password}") String password) {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(host, port);
+        factory.setPassword(password);
+        return factory;
     }
 
     /**
@@ -58,9 +63,13 @@ public class RedisConfig {
      * FastAPI 공유용 Redis 연결 팩토리 (spring.data.redis.schedule.* 값을 기반으로 생성됨)
      */
     @Bean(name = "scheduleRedisConnectionFactory")
-    @ConfigurationProperties(prefix = "spring.data.redis.schedule")
-    public LettuceConnectionFactory scheduleRedisConnectionFactory() {
-        return new LettuceConnectionFactory();
+    public LettuceConnectionFactory scheduleRedisConnectionFactory(
+        @Value("${spring.data.redis.schedule.host}") String host,
+        @Value("${spring.data.redis.schedule.port}") int port,
+        @Value("${spring.data.redis.schedule.password}") String password) {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(host, port);
+        factory.setPassword(password);
+        return factory;
     }
 
     /**

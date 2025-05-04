@@ -38,6 +38,7 @@ public class OauthController {
             final HttpServletResponse response
     ) {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
+        log.info("redirect to " + redirectUrl);
         response.sendRedirect(redirectUrl);
         return ApiResponse.ofNoting(SuccessStatus.OAUTH_REDIRECT);
     }
