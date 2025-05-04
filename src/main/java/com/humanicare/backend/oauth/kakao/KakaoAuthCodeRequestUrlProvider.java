@@ -3,11 +3,13 @@ package com.humanicare.backend.oauth.kakao;
 import com.humanicare.backend.oauth.AuthCodeRequestUrlProvider;
 import com.humanicare.backend.oauth.OauthServerType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class KakaoAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvider {
 
     private final KakaoOauthConfig kakaoOauthConfig;
@@ -19,6 +21,7 @@ public class KakaoAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvid
 
     @Override
     public String provide() {
+        log.info("KAKAO AUTH CODE REQUEST URL");
         return UriComponentsBuilder
                 .fromUriString("https://kauth.kakao.com/oauth/authorize")
                 .queryParam("client_id", kakaoOauthConfig.clientId())
