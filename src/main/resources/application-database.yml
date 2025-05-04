@@ -31,5 +31,5 @@ spring:
         password: babyy1023@
       schedule:
         host: redis2
-        port: 6380
+        port: 6379
         password: babyy1023@
