@@ -228,7 +228,7 @@ public class JwtService {
         cookie.setMaxAge(refreshTokenExpirationPeriod);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain("localhost");
+        cookie.setDomain("humanicare.store");
         cookie.setHttpOnly(true);
         cookie.setAttribute("SameSite", "None");
         return cookie;
