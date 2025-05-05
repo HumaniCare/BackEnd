@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - fix/dockerconnect
+      - fix/dockerconnect #이제 이거 제거
 
 jobs:
   build:
