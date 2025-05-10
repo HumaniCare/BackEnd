@@ -3,19 +3,14 @@ package com.humanicare.backend.controller;
 import com.humanicare.backend.apiPayload.ApiResponse;
 import com.humanicare.backend.apiPayload.code.status.SuccessStatus;
 import com.humanicare.backend.converter.DiaryConverter;
-import com.humanicare.backend.converter.ScheduleConverter;
 import com.humanicare.backend.domain.Diary;
-import com.humanicare.backend.domain.Schedule;
 import com.humanicare.backend.dto.DiaryDto;
-import com.humanicare.backend.dto.ScheduleDto;
 import com.humanicare.backend.service.DiaryService;
-import com.humanicare.backend.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
