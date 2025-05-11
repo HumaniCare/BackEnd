@@ -42,7 +42,6 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String email;
     private String name;
-    private String invitationCode;
 
     @Enumerated(EnumType.STRING)
     private Role role;
