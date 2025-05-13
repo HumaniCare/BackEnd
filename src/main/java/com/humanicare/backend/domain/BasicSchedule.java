@@ -25,6 +25,7 @@
         @Column
         private String scheduleTitle;
         private LocalTime startTime;
+        private String url;
 
         @ElementCollection
         @Column(name = "day") // 컬럼 이름
@@ -38,5 +39,9 @@
             this.scheduleTitle = title;
             this.startTime = time;
             this.days = days;
+        }
+
+        public void updateUrl(String url) {
+            this.url = url;
         }
     }

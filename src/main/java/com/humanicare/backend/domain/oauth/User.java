@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String email;
     private String name;
-    private String invitationCode;
+    private String petName;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -59,6 +59,10 @@ public class User extends BaseEntity {
 
     public void updateRole() {
         this.role = Role.SAVED;
+    }
+
+    public void updatePetName(String petName) {
+        this.petName = petName;
     }
 
 }
