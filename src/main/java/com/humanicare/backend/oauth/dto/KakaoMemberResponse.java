@@ -7,11 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.humanicare.backend.domain.Role;
 import com.humanicare.backend.domain.oauth.OauthId;
 import com.humanicare.backend.domain.oauth.User;
-import com.humanicare.backend.oauth.InvitationCodeGenerator;
-import com.humanicare.backend.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 /**
@@ -27,13 +24,11 @@ public record KakaoMemberResponse(
 ) {
 
     //아래의 값을 바꾸면 USER에 저장되는게 알아서 설정됨.
-    public User toDomain(String invitationCode) {
+    public User toDomain() {
         System.out.println(kakaoAccount.profile.nickname);
         return User.builder()
                 .oauthId(new OauthId(String.valueOf(id), KAKAO))
                 .name(kakaoAccount.profile.nickname)
-//                .email(kakaoAccount.email)
-                .invitationCode(invitationCode)
                 .role(Role.FIRST)
                 .build();
     }

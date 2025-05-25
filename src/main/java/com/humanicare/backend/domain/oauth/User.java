@@ -61,5 +61,6 @@ public class User extends BaseEntity {
         this.role = Role.SAVED;
     }
 
+
     public void updateAlias(String alias) { this.alias = alias;}
 }
