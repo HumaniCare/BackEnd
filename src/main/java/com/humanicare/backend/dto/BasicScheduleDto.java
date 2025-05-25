@@ -23,6 +23,7 @@ public class BasicScheduleDto {
         private LocalTime startTime;
 
         private List<String> days;
+        private String url;
     }
 
     @Getter

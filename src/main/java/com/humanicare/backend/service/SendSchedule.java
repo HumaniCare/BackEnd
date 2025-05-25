@@ -46,10 +46,12 @@ public class SendSchedule {
         if (!schedules.isEmpty()) {
             for (BasicSchedule schedule : schedules) {
                 BasicScheduleDto.ScheduleDto dto = BasicScheduleConverter.toBasicScheduleDto(schedule);
+                if(dto.getUrl() == null)
+                    continue;
 
                 // Redis Key-Value 저장
                 String redisKey = "schedule:" + schedule.getId();
-                redisTemplate.opsForValue().set(redisKey, dto);
+                redisTemplate.opsForValue().set(redisKey, dto.getUrl());
 
                 try {
                     // JSON 직렬화
@@ -58,11 +60,11 @@ public class SendSchedule {
                     // Pub/Sub 채널에 JSON 메시지 발행
                     redisTemplate.convertAndSend("spring-scheduler-channel", json);
 
-                    log.info("✅ Redis에 저장됨 → Key: {}, 값: {}", redisKey, dto);
-                    log.info("📢 JSON 메시지 발행됨 → 채널: spring-scheduler-channel, 내용: {}", json);
+                    log.info("Redis에 저장됨 → Key: {}, 값: {}", redisKey, dto);
+                    log.info("JSON 메시지 발행됨 → 채널: spring-scheduler-channel, 내용: {}", json);
 
                 } catch (JsonProcessingException e) {
-                    log.error("❌ JSON 직렬화 실패: {}", e.getMessage());
+                    log.error("JSON 직렬화 실패: {}", e.getMessage());
                 }
             }
         } else {
