@@ -42,7 +42,6 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String email;
     private String name;
-    private String petName;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -52,6 +51,7 @@ public class User extends BaseEntity {
 
     @Column
     private String voiceUrl;
+    private String alias;
 
     public void updateVoiceUrl(String voiceUrl) {
         this.voiceUrl = voiceUrl;
@@ -61,8 +61,6 @@ public class User extends BaseEntity {
         this.role = Role.SAVED;
     }
 
-    public void updatePetName(String petName) {
-        this.petName = petName;
-    }
 
+    public void updateAlias(String alias) { this.alias = alias;}
 }

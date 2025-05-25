@@ -10,6 +10,7 @@ import com.humanicare.backend.domain.oauth.User;
 import com.humanicare.backend.dto.BasicScheduleDto;
 import com.humanicare.backend.jwt.service.JwtService;
 import com.humanicare.backend.service.BasicScheduleService;
+import com.humanicare.backend.service.UrlService;
 import com.humanicare.backend.service.user.UserCheckService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

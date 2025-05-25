@@ -38,6 +38,7 @@ public class BasicScheduleConverter {
                 .scheduleTitle(schedule.getScheduleTitle())
                 .startTime(schedule.getStartTime())
                 .days(schedule.getDays())
+                .url(schedule.getUrl())
                 .build();
     }
 }

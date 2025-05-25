@@ -23,5 +23,16 @@ public class BasicScheduleDto {
         private LocalTime startTime;
 
         private List<String> days;
+        private String url;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UrlDto {
+        private Long id;
+        private String url;
     }
 }
