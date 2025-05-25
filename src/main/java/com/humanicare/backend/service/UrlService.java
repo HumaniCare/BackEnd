@@ -18,7 +18,7 @@ public class UrlService {
     private final RestTemplate restTemplate;
 
     public Map<String, String> sendSchedulesToFastAPI(String voiceId, String alias, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
-        String url = "http://fastapi:8000/schedules"; // 예: http://localhost:8000/schedules
+        String url = "http://fastapi:8000/api/fastapi/schedules"; // 예: http://localhost:8000/schedules
 
         // 요청 본문 구성
         List<Long> scheduleIdList = new ArrayList<>();
