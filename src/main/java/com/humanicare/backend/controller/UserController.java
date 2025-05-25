@@ -8,6 +8,7 @@ import com.humanicare.backend.apiPayload.code.status.SuccessStatus;
 import com.humanicare.backend.domain.oauth.User;
 import com.humanicare.backend.service.user.UserCheckService;
 import com.humanicare.backend.service.user.UserRoleService;
+import com.humanicare.backend.service.user.UserUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class UserController {
 
     private final UserCheckService userCheckService;
     private final UserRoleService userRoleService;
+    private final UserUpdateService userUpdateService;
 
     @PostMapping("/login")
     @Operation(summary = "스웨거 용 로그인")
@@ -42,17 +44,14 @@ public class UserController {
         return ApiResponse.ofNoting(SuccessStatus._OK);
     }
 
-    @GetMapping("/invitation")
-    @Operation(summary = "초대코드 확인")
-    public ApiResponse<String> getInvitationCode(@RequestHeader("Authorization") final String authorizationHeader) {
-        String invitationCode = "1234"; //DTO로 만들기
-//        userService.getInvitationCode();
-        return ApiResponse.onSuccess(invitationCode);
-    }
-
-    @PostMapping("/invitation")
-    @Operation(summary = "초대코드 입력")
-    public ApiResponse<Void> inputInvitationCode(@RequestHeader("Authorization") final String authorizationHeader) {
+    @PostMapping("/records/voices")
+    @Operation(summary="voice id 받기")
+    public ApiResponse<Void> recordVoices(@RequestHeader("Authorization") final String authorizationHeader,
+                                          @RequestBody String voiceUrl) {
+        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
+        User user = userCheckService.getUserByToken(accessToken);
+        log.info("voiceId 수행");
+        userUpdateService.updateUserVoice(user, voiceUrl);
         return ApiResponse.ofNoting(SuccessStatus._OK);
     }
 }

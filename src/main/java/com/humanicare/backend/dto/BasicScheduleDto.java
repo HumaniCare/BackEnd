@@ -24,4 +24,14 @@ public class BasicScheduleDto {
 
         private List<String> days;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UrlDto {
+        private Long id;
+        private String url;
+    }
 }

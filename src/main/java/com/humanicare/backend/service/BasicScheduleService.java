@@ -25,6 +25,7 @@ public class BasicScheduleService {
     private final BasicScheduleRepository basicScheduleRepository;
     private final UserCheckService userCheckService;
     private final ApplicationContext applicationContext;
+    private final UrlService urlService;
 
 
     public List<BasicSchedule> getAllSchedule(String accessToken) {
@@ -42,10 +43,13 @@ public class BasicScheduleService {
         }
     }
 
+    @Transactional
     public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
         User user = userCheckService.getUserByToken(accessToken);
 
-        // 기존 스케줄을 Map으로 구성
+        List<BasicScheduleDto.ScheduleDto> scheduleDtoList = new ArrayList<>();
+
+        //기존 스케줄을 Map으로 구성
         List<BasicSchedule> originSchedules = basicScheduleRepository.findByUser(user);
         Map<String, BasicSchedule> originScheduleMap = originSchedules.stream()
                 .collect(Collectors.toMap(BasicSchedule::getScheduleTitle, s -> s));
@@ -64,6 +68,7 @@ public class BasicScheduleService {
                 // create
                 BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
                 basicScheduleRepository.save(newSchedule);
+                scheduleDtoList.add(dto);
             }
         }
 
@@ -72,6 +77,13 @@ public class BasicScheduleService {
             if (!incomingTitles.contains(old.getScheduleTitle())) {
                 basicScheduleRepository.delete(old);
             }
+        }
+
+        Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
+        for(Map.Entry<String, String> entry : urls.entrySet()) {
+            basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
+                schedule.updateUrl(entry.getValue());
+            });
         }
     }
 
