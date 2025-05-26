@@ -29,8 +29,10 @@ public class UrlService {
         }
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("voice_id", voiceId);
-        requestBody.put("alias", alias);
+//        requestBody.put("voice_id", voiceId);
+//        requestBody.put("alias", alias);
+        requestBody.put("voice_id", 1);
+        requestBody.put("alias", "mom");
         requestBody.put("schedule_id", scheduleIdList);
         requestBody.put("schedule_text", scheduleTextList);
 
