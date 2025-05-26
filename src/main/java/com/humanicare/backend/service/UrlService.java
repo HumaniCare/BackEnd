@@ -28,6 +28,10 @@ public class UrlService {
             scheduleTextList.add(schedule.getScheduleTitle());
         }
 
+        if(scheduleIdList.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
         Map<String, Object> requestBody = new HashMap<>();
 //        requestBody.put("voice_id", voiceId);
 //        requestBody.put("alias", alias);
