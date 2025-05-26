@@ -82,6 +82,7 @@ public class BasicScheduleService {
         Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
         for(Map.Entry<String, String> entry : urls.entrySet()) {
             basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
+                log.info("schedule: {}, url: {}", schedule.getScheduleTitle(), entry.getValue());
                 schedule.updateUrl(entry.getValue());
             });
         }
