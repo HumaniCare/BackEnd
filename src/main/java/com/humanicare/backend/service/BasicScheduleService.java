@@ -67,8 +67,9 @@ public class BasicScheduleService {
             } else {
                 // create
                 BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
-                basicScheduleRepository.save(newSchedule);
-                scheduleDtoList.add(dto);
+                BasicSchedule save = basicScheduleRepository.save(newSchedule);
+                BasicScheduleDto.ScheduleDto savedDto = BasicScheduleConverter.toBasicScheduleDto(save);
+                scheduleDtoList.add(savedDto);
             }
         }
 
