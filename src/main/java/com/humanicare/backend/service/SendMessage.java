@@ -17,10 +17,10 @@ public class SendMessage {
 
     private final UserCheckService userCheckService;
 
-    @Value("${coolsms.api.key}")
+    @Value("${COOLSMS_API_KEY}")
     private String apiKey;
 
-    @Value("${coolsms.api.secret}")
+    @Value("${COOLSMS_API_SECRET}")
     private String apiSecret;
 
     public JSONObject sendSms(String accessToken, String text) throws CoolsmsException {
