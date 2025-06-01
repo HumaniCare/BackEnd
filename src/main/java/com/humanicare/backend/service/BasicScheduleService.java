@@ -56,6 +56,8 @@ public class BasicScheduleService {
 
         Set<String> incomingTitles = new HashSet<>();
 
+
+
         // 요청된 스케줄 처리 (create or update)
         for (BasicScheduleDto.ScheduleDto dto : scheduleDtos) {
             incomingTitles.add(dto.getScheduleTitle());
@@ -65,11 +67,21 @@ public class BasicScheduleService {
                 BasicScheduleService proxy = applicationContext.getBean(BasicScheduleService.class);
                 proxy.updateSchedule(originScheduleMap.get(dto.getScheduleTitle()), dto);
             } else {
-                // create
-                BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
-                BasicSchedule save = basicScheduleRepository.save(newSchedule);
-                BasicScheduleDto.ScheduleDto savedDto = BasicScheduleConverter.toBasicScheduleDto(save);
-                scheduleDtoList.add(savedDto);
+                //alias나 PhoneNum는 따로 처리
+                String[] titles = dto.getScheduleTitle().split("_");
+                if(titles[0].equals("GuardianTitle")) {
+                    user.updateAlias(titles[1]);
+                }
+                else if(titles[0].equals("GuardianPhone")) {
+                    user.updatePhoneNum(titles[1]);
+                }
+                else {
+                    // create
+                    BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
+                    BasicSchedule save = basicScheduleRepository.save(newSchedule);
+                    BasicScheduleDto.ScheduleDto savedDto = BasicScheduleConverter.toBasicScheduleDto(save);
+                    scheduleDtoList.add(savedDto);
+                }
             }
         }
 
@@ -80,14 +92,14 @@ public class BasicScheduleService {
             }
         }
 
-        log.info("scheduleDtoList: {}", scheduleDtoList);
-        Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
-        for(Map.Entry<String, String> entry : urls.entrySet()) {
-            basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
-                log.info("schedule: {}, url: {}", schedule.getScheduleTitle(), entry.getValue());
-                schedule.updateUrl(entry.getValue());
-            });
-        }
+//        log.info("scheduleDtoList: {}", scheduleDtoList);
+//        Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
+//        for(Map.Entry<String, String> entry : urls.entrySet()) {
+//            basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
+//                log.info("schedule: {}, url: {}", schedule.getScheduleTitle(), entry.getValue());
+//                schedule.updateUrl(entry.getValue());
+//            });
+//        }
     }
 
     @Transactional
