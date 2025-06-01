@@ -52,6 +52,7 @@ public class User extends BaseEntity {
     @Column
     private String voiceUrl;
     private String alias;
+    private String phoneNum;
 
     public void updateVoiceUrl(String voiceUrl) {
         this.voiceUrl = voiceUrl;
@@ -63,4 +64,5 @@ public class User extends BaseEntity {
 
 
     public void updateAlias(String alias) { this.alias = alias;}
+    public void updatePhoneNum(String phoneNum) { this.phoneNum = phoneNum; }
 }

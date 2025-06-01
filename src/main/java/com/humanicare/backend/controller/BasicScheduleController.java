@@ -15,6 +15,7 @@ import com.humanicare.backend.service.user.UserCheckService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class BasicScheduleController {
     @PostMapping("/basic-schedules")
     @Operation(summary = "기본 일정 생성하기", description = "기본적으로 여러 개를 생성할 수 있게 하자.")
     public ApiResponse<Void> createBasicSchedule(@RequestHeader("Authorization") final String authorizationHeader,
-                                                 @RequestBody List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
+                                                 @RequestBody List<BasicScheduleDto.ScheduleDto> scheduleDtos) throws CoolsmsException {
         log.info("Create BasicSchedule");
         String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
         basicScheduleService.createSchedule(accessToken, scheduleDtos);

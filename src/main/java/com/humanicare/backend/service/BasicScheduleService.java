@@ -10,6 +10,8 @@ import com.humanicare.backend.repository.BasicScheduleRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ public class BasicScheduleService {
     private final BasicScheduleRepository basicScheduleRepository;
     private final UserCheckService userCheckService;
     private final ApplicationContext applicationContext;
+    private final SendMessage sendMessage;
     private final UrlService urlService;
 
 
@@ -44,7 +47,7 @@ public class BasicScheduleService {
     }
 
     @Transactional
-    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
+    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) throws CoolsmsException {
         User user = userCheckService.getUserByToken(accessToken);
 
         List<BasicScheduleDto.ScheduleDto> scheduleDtoList = new ArrayList<>();
@@ -65,11 +68,21 @@ public class BasicScheduleService {
                 BasicScheduleService proxy = applicationContext.getBean(BasicScheduleService.class);
                 proxy.updateSchedule(originScheduleMap.get(dto.getScheduleTitle()), dto);
             } else {
-                // create
-                BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
-                BasicSchedule save = basicScheduleRepository.save(newSchedule);
-                BasicScheduleDto.ScheduleDto savedDto = BasicScheduleConverter.toBasicScheduleDto(save);
-                scheduleDtoList.add(savedDto);
+                //alias나 PhoneNum는 따로 처리
+                String[] titles = dto.getScheduleTitle().split("_");
+                if(titles[0].equals("GuardianTitle")) {
+                    user.updateAlias(titles[1]);
+                }
+                else if(titles[0].equals("GuardianPhone")) {
+                    user.updatePhoneNum(titles[1]);
+                }
+                else {
+                    // create
+                    BasicSchedule newSchedule = BasicScheduleConverter.toBasicSchedule(user, dto);
+                    BasicSchedule save = basicScheduleRepository.save(newSchedule);
+                    BasicScheduleDto.ScheduleDto savedDto = BasicScheduleConverter.toBasicScheduleDto(save);
+                    scheduleDtoList.add(savedDto);
+                }
             }
         }
 
@@ -88,6 +101,9 @@ public class BasicScheduleService {
                 schedule.updateUrl(entry.getValue());
             });
         }
+        JSONObject result = sendMessage.sendSms(accessToken, "스케쥴 update 성공");
+        log.info("전송 결과: " + result.toJSONString());
+
     }
 
     @Transactional
