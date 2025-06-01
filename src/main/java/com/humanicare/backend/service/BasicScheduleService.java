@@ -10,6 +10,8 @@ import com.humanicare.backend.repository.BasicScheduleRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ public class BasicScheduleService {
     private final BasicScheduleRepository basicScheduleRepository;
     private final UserCheckService userCheckService;
     private final ApplicationContext applicationContext;
+    private final SendMessage sendMessage;
     private final UrlService urlService;
 
 
@@ -44,7 +47,7 @@ public class BasicScheduleService {
     }
 
     @Transactional
-    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
+    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) throws CoolsmsException {
         User user = userCheckService.getUserByToken(accessToken);
 
         List<BasicScheduleDto.ScheduleDto> scheduleDtoList = new ArrayList<>();
@@ -55,8 +58,6 @@ public class BasicScheduleService {
                 .collect(Collectors.toMap(BasicSchedule::getScheduleTitle, s -> s));
 
         Set<String> incomingTitles = new HashSet<>();
-
-
 
         // 요청된 스케줄 처리 (create or update)
         for (BasicScheduleDto.ScheduleDto dto : scheduleDtos) {
@@ -92,14 +93,17 @@ public class BasicScheduleService {
             }
         }
 
-//        log.info("scheduleDtoList: {}", scheduleDtoList);
-//        Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
-//        for(Map.Entry<String, String> entry : urls.entrySet()) {
-//            basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
-//                log.info("schedule: {}, url: {}", schedule.getScheduleTitle(), entry.getValue());
-//                schedule.updateUrl(entry.getValue());
-//            });
-//        }
+        log.info("scheduleDtoList: {}", scheduleDtoList);
+        Map<String, String> urls = urlService.sendSchedulesToFastAPI(user.getVoiceUrl(), user.getAlias(), scheduleDtoList);
+        for(Map.Entry<String, String> entry : urls.entrySet()) {
+            basicScheduleRepository.findById(Long.parseLong(entry.getKey())).ifPresent(schedule -> {
+                log.info("schedule: {}, url: {}", schedule.getScheduleTitle(), entry.getValue());
+                schedule.updateUrl(entry.getValue());
+            });
+        }
+        JSONObject result = sendMessage.sendSms(accessToken, "스케쥴 update 성공");
+        log.info("전송 결과: " + result.toJSONString());
+
     }
 
     @Transactional
