@@ -36,7 +36,7 @@ public class ReportController {
     @PostMapping("/report")
     @Operation(summary="report 저장")
     public ApiResponse<Void> createReport(@RequestHeader("Authorization") final String authorizationHeader,
-                                          @RequestParam ReportDto reportDto) {
+                                          @RequestBody ReportDto reportDto) {
         log.info("Create BasicSchedule");
         String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
         reportService.createReport(accessToken, reportDto);
