@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +27,12 @@ public class ReportService {
         Report report = ReportConverter.toReport(user, reportDto);
         log.info("저장된 report: {}", report);
         reportRepository.save(report);
+    }
+
+    public ReportDto getReport(String accessToken) {
+        User user = userCheckService.getUserByToken(accessToken);
+        Report latestReport = reportRepository.findTopByUserOrderByIdDesc(user)
+                .orElseThrow(() -> new NoSuchElementException("최근 리포트가 없습니다."));
+        return ReportConverter.toReportDto(latestReport);
     }
 }

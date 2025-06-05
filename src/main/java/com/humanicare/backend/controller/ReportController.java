@@ -26,11 +26,11 @@ public class ReportController {
 
     @GetMapping("/reports")
     @Operation(summary = "감정 일기 확인하기")
-    public ApiResponse<ReportDto.DiaryFullDto> getDiary(@RequestHeader("Authorization") final String authorizationHeader,
-                                                        @RequestParam LocalDate date) {
-        Report report = reportService.getDiary(date);
-        return ApiResponse.of(SuccessStatus.GET_DIARY,
-                ReportConverter.toDiaryDto(report));
+    public ApiResponse<ReportDto> getDiary(@RequestHeader("Authorization") final String authorizationHeader) {
+        String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
+        ReportDto report = reportService.getReport(accessToken);
+        return ApiResponse.of(SuccessStatus.GET_REPORT,
+                report);
     }
 
     @PostMapping("/report")
