@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -15,23 +14,20 @@ import java.time.LocalTime;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "diary")
-public class Diary {
+public class Report {
     @Id
     @Column(name = "diary_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "diary_full", unique = true)
-    private String diaryFull;
+    @Column(name = "image_url", unique = true)
+    private String imageUrl;
 
-    @Column(name = "diary_summary", unique = true)
-    private String diarySummary;
+    @Column(name = "report_text", unique = true)
+    private String reportText;
 
     @Column(name = "date", unique = true)
     private LocalDate date;
-
-    @Column
-    private Emotion emotion;
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 추천
     @JoinColumn(name = "user_id")
