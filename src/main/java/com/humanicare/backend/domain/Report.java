@@ -23,7 +23,7 @@ public class Report {
     @Column(name = "image_url", unique = true)
     private String imageUrl;
 
-    @Column(name = "report_text", unique = true)
+    @Column(name = "report_text", columnDefinition = "TEXT")
     private String reportText;
 
     @Column(name = "date", unique = true)
