@@ -1,6 +1,7 @@
 package com.humanicare.backend.service;
 
 import com.humanicare.backend.domain.oauth.User;
+import com.humanicare.backend.repository.UserRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
 public class SendMessage {
 
     private final UserCheckService userCheckService;
+    private final UserRepository userRepository;
 
     @Value("${COOLSMS_API_KEY}")
     private String apiKey;
@@ -23,9 +26,9 @@ public class SendMessage {
     @Value("${COOLSMS_API_SECRET}")
     private String apiSecret;
 
-    public JSONObject sendSms(String accessToken, String text) throws CoolsmsException {
+    public JSONObject sendSms(String text) throws CoolsmsException {
         System.out.println("메세지 전송 시작");
-        User user = userCheckService.getUserByToken(accessToken);
+        User user = userRepository.findById(2L).orElseThrow(NoSuchElementException::new);
 
         Message coolsms = new Message(apiKey, apiSecret);
         HashMap<String, String> params = new HashMap<>();

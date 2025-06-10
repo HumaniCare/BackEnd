@@ -5,6 +5,7 @@ import com.humanicare.backend.domain.Report;
 import com.humanicare.backend.domain.oauth.User;
 import com.humanicare.backend.dto.ReportDto;
 import com.humanicare.backend.repository.ReportRepository;
+import com.humanicare.backend.repository.UserRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,16 @@ import java.util.NoSuchElementException;
 public class ReportService {
 
     private final UserCheckService userCheckService;
+    private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final SendMessage sendMessage;
 
-    public void createReport(String accessToken, ReportDto reportDto) throws CoolsmsException {
-        User user = userCheckService.getUserByToken(accessToken);
+    public void createReport(ReportDto reportDto) throws CoolsmsException {
+        User user = userRepository.findById(2L).orElseThrow(NoSuchElementException::new);
         Report report = ReportConverter.toReport(user, reportDto);
         log.info("저장된 report: {}", report);
         reportRepository.save(report);
-        JSONObject result = sendMessage.sendSms(accessToken, "report가 update되었습니다. www.humanicare.store로 들어가서 확인하세요.");
+        JSONObject result = sendMessage.sendSms("report가 update되었습니다. www.humanicare.store로 들어가서 확인하세요.");
     }
 
     public ReportDto getReport(String accessToken) {

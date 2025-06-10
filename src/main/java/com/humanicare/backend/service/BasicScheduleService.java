@@ -101,7 +101,7 @@ public class BasicScheduleService {
                 schedule.updateUrl(entry.getValue());
             });
         }
-        JSONObject result = sendMessage.sendSms(accessToken, "스케쥴 update 성공");
+        JSONObject result = sendMessage.sendSms("스케쥴 update 성공");
         log.info("전송 결과: " + result.toJSONString());
 
     }

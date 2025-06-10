@@ -43,6 +43,7 @@ public class SendSchedule {
 
         List<BasicSchedule> schedules = basicScheduleRepository.findWithDaysByStartTime(now);
 
+        
         if (!schedules.isEmpty()) {
             for (BasicSchedule schedule : schedules) {
                 BasicScheduleDto.ScheduleDto dto = BasicScheduleConverter.toBasicScheduleDto(schedule);
