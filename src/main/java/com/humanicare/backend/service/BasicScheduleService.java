@@ -47,7 +47,7 @@ public class BasicScheduleService {
     }
 
     @Transactional
-    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) throws CoolsmsException {
+    public void createSchedule(String accessToken, List<BasicScheduleDto.ScheduleDto> scheduleDtos) {
         User user = userCheckService.getUserByToken(accessToken);
 
         List<BasicScheduleDto.ScheduleDto> scheduleDtoList = new ArrayList<>();
@@ -101,8 +101,8 @@ public class BasicScheduleService {
                 schedule.updateUrl(entry.getValue());
             });
         }
-        JSONObject result = sendMessage.sendSms("스케쥴 update 성공");
-        log.info("전송 결과: " + result.toJSONString());
+//        JSONObject result = sendMessage.sendSms("스케쥴 update 성공");
+//        log.info("전송 결과: " + result.toJSONString());
 
     }
 
