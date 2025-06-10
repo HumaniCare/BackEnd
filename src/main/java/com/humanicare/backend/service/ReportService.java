@@ -8,6 +8,8 @@ import com.humanicare.backend.repository.ReportRepository;
 import com.humanicare.backend.service.user.UserCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,12 +23,14 @@ public class ReportService {
 
     private final UserCheckService userCheckService;
     private final ReportRepository reportRepository;
+    private final SendMessage sendMessage;
 
-    public void createReport(String accessToken, ReportDto reportDto) {
+    public void createReport(String accessToken, ReportDto reportDto) throws CoolsmsException {
         User user = userCheckService.getUserByToken(accessToken);
         Report report = ReportConverter.toReport(user, reportDto);
         log.info("저장된 report: {}", report);
         reportRepository.save(report);
+        JSONObject result = sendMessage.sendSms(accessToken, "report가 update되었습니다. www.humanicare.store로 들어가서 확인하세요.");
     }
 
     public ReportDto getReport(String accessToken) {

@@ -9,6 +9,7 @@ import com.humanicare.backend.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class ReportController {
     @PostMapping("/report")
     @Operation(summary="report 저장")
     public ApiResponse<Void> createReport(@RequestHeader("Authorization") final String authorizationHeader,
-                                          @RequestBody ReportDto reportDto) {
+                                          @RequestBody ReportDto reportDto) throws CoolsmsException {
         log.info("Create Report");
         String accessToken = authorizationHeader.replace(ACCESS_TOKEN_PREFIX, ACCESS_TOKEN_REPLACEMENT);
         reportService.createReport(accessToken, reportDto);
