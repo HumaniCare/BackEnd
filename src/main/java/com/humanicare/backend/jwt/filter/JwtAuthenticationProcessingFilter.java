@@ -39,7 +39,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     );
 
     private static final Set<String> NOT_APPLY_JWT_FILTER_PREFIXES = Set.of(
-            "/api/spring/reissue", "/api/spring/oauth", "/api/spring/google-login", "/health"
+            "/api/spring/reissue", "/api/spring/oauth", "/api/spring/google-login", "/api/spring/report", "/health"
     );
 
     private final JwtService jwtService;
