@@ -28,6 +28,7 @@ public class ReportService {
     private final SendMessage sendMessage;
 
     public void createReport(ReportDto reportDto) throws CoolsmsException {
+        log.info("Creating report for report: {}", reportDto);
         User user = userRepository.findById(2L).orElseThrow(NoSuchElementException::new);
         Report report = ReportConverter.toReport(user, reportDto);
         log.info("저장된 report: {}", report);
