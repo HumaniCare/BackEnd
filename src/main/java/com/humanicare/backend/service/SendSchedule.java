@@ -55,8 +55,11 @@ public class SendSchedule {
                 redisTemplate.opsForValue().set(redisKey, dto.getUrl());
 
                 try {
-                    // JSON 직렬화
-                    String json = objectMapper.writeValueAsString(dto);
+                    String json;
+                    if (schedule.getScheduleTitle().startsWith("ReportTime"))
+                        json = objectMapper.writeValueAsString("interaction");
+                    else
+                        json = objectMapper.writeValueAsString(dto);
 
                     // Pub/Sub 채널에 JSON 메시지 발행
                     redisTemplate.convertAndSend("spring-scheduler-channel", json);
