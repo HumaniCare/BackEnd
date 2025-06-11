@@ -35,7 +35,7 @@ public class UrlService {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("voice_id", voiceId);
 //        requestBody.put("alias", alias);
-        requestBody.put("alias", "mom");
+        requestBody.put("alias", "아빠");
         requestBody.put("schedule_id", scheduleIdList);
         requestBody.put("schedule_text", scheduleTextList);
 
