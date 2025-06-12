@@ -28,7 +28,7 @@ public class SendMessage {
 
     public JSONObject sendSms(String text) throws CoolsmsException {
         System.out.println("메세지 전송 시작");
-        User user = userRepository.findById(2L).orElseThrow(NoSuchElementException::new);
+        User user = userRepository.findById(3L).orElseThrow(NoSuchElementException::new);
 
         Message coolsms = new Message(apiKey, apiSecret);
         HashMap<String, String> params = new HashMap<>();
